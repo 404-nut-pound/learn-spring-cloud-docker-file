@@ -1,6 +1,12 @@
 version: '3.4'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+
   kafka:
     image: bitnami/kafka:3.5.1
     container_name: kafka
@@ -9,6 +15,7 @@ services:
     environment:
       ALLOW_PLAINTEXT_LISTENER: yes
       KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 
   zookeeper:
@@ -74,6 +81,11 @@ services:
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: 'io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor'
       CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components'
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - 9411:9411
 #version: '3.4'
 #
 #services:
